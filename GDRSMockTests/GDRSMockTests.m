@@ -7,6 +7,23 @@
 //
 
 #import <XCTest/XCTest.h>
+#import "GDRSMock.h"
+
+typedef void(^GDRSMockedTestClassBlock)(NSUInteger index);
+
+@interface GDRSMockedTestClass : NSObject
+@property (nonatomic) NSUInteger integerProp;
+- (void)blockMethod:(GDRSMockedTestClassBlock)block;
+@end
+
+@implementation GDRSMockedTestClass
+- (void)blockMethod:(GDRSMockedTestClassBlock)block {
+}
+@end
+
+
+
+#pragma mark -
 
 @interface GDRSMockTests : XCTestCase
 
@@ -14,21 +31,41 @@
 
 @implementation GDRSMockTests
 
-- (void)setUp
-{
+- (void)setUp {
     [super setUp];
-    // Put setup code here. This method is called before the invocation of each test method in the class.
 }
 
-- (void)tearDown
-{
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
+- (void)tearDown {
     [super tearDown];
 }
 
-- (void)testExample
-{
-    XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+- (void)testIntegerHandling {
+
+    GDRSMockedTestClass *mock = [GDRSMock mockWithMockedObject:[GDRSMockedTestClass new] forwardCalls:NO setupBlock:^(GDRSMock *mock) {
+        [mock gdrs_mock_setResponderForSelector:@selector(integerProp) block:^(GDRSMockMethodCall *methodCall) {
+            [methodCall setUIntegerRetrunValue:2];
+        }];
+    }];
+    
+    XCTAssertEqual(mock.integerProp, (NSUInteger)2, @"Testing in integer property has failed. Returned value is %i, while it should have been 2.", mock.integerProp);
 }
+
+- (void)testRetrivingBlockArgument {
+    
+    __block NSUInteger result = 0;
+    GDRSMockedTestClass *mock = [GDRSMock mockWithMockedObject:[GDRSMockedTestClass new] forwardCalls:NO setupBlock:^(GDRSMock *mock) {
+        [mock gdrs_mock_setResponderForSelector:@selector(blockMethod:) block:^(GDRSMockMethodCall *methodCall) {
+            GDRSMockedTestClassBlock blockArg = [methodCall getObjectArgumentAtIndex:0];
+            blockArg(5);
+        }];
+    }];
+    
+    [mock blockMethod:^(NSUInteger index) {
+        result = index;
+    }];
+    
+    XCTAssertEqual(result, (NSUInteger)5, @"");
+}
+
 
 @end

@@ -16,6 +16,7 @@
 		788E0A1C1826EBB200AC5C72 /* libGDRSMock.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 788E0A041826EBB200AC5C72 /* libGDRSMock.a */; };
 		788E0A221826EBB200AC5C72 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 788E0A201826EBB200AC5C72 /* InfoPlist.strings */; };
 		788E0A241826EBB200AC5C72 /* GDRSMockTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 788E0A231826EBB200AC5C72 /* GDRSMockTests.m */; };
+		788E0A30182713CE00AC5C72 /* GDRSMockMethodCall.m in Sources */ = {isa = PBXBuildFile; fileRef = 788E0A2F182713CE00AC5C72 /* GDRSMockMethodCall.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -53,6 +54,8 @@
 		788E0A1F1826EBB200AC5C72 /* GDRSMockTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "GDRSMockTests-Info.plist"; sourceTree = "<group>"; };
 		788E0A211826EBB200AC5C72 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		788E0A231826EBB200AC5C72 /* GDRSMockTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = GDRSMockTests.m; sourceTree = "<group>"; };
+		788E0A2E182713CE00AC5C72 /* GDRSMockMethodCall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GDRSMockMethodCall.h; sourceTree = "<group>"; };
+		788E0A2F182713CE00AC5C72 /* GDRSMockMethodCall.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GDRSMockMethodCall.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +115,8 @@
 			children = (
 				788E0A0C1826EBB200AC5C72 /* GDRSMock.h */,
 				788E0A0E1826EBB200AC5C72 /* GDRSMock.m */,
+				788E0A2E182713CE00AC5C72 /* GDRSMockMethodCall.h */,
+				788E0A2F182713CE00AC5C72 /* GDRSMockMethodCall.m */,
 				788E0A0A1826EBB200AC5C72 /* Supporting Files */,
 			);
 			path = GDRSMock;
@@ -224,6 +229,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				788E0A30182713CE00AC5C72 /* GDRSMockMethodCall.m in Sources */,
 				788E0A0F1826EBB200AC5C72 /* GDRSMock.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -368,6 +374,12 @@
 					"$(inherited)",
 				);
 				INFOPLIST_FILE = "GDRSMockTests/GDRSMockTests-Info.plist";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					XCTest,
+					"-ObjC",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = xctest;
 			};
@@ -385,6 +397,12 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "GDRSMock/GDRSMock-Prefix.pch";
 				INFOPLIST_FILE = "GDRSMockTests/GDRSMockTests-Info.plist";
+				OTHER_LDFLAGS = (
+					"$(inherited)",
+					"-framework",
+					XCTest,
+					"-ObjC",
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = xctest;
 			};
