@@ -64,7 +64,7 @@ typedef void(^GDRSMockedTestClassBlock)(NSUInteger index);
         result = index;
     }];
     
-    XCTAssertEqual(result, (NSUInteger)5, @"");
+    XCTAssertEqual(result, (NSUInteger)5, @"Testing block execution has failed.");
 }
 
 
