@@ -12,7 +12,11 @@
 typedef void(^GDRSMockedTestClassBlock)(NSUInteger index);
 
 @interface GDRSMockedTestClass : NSObject
-@property (nonatomic) NSUInteger integerProp;
+@property (nonatomic) NSInteger integerProp;
+@property (nonatomic) NSUInteger uIntegerProp;
+@property (nonatomic) float floatProp;
+@property (nonatomic) double doubleProp;
+@property (nonatomic) id objectProp;
 - (void)blockMethod:(GDRSMockedTestClassBlock)block;
 - (void)logTestWithAnInteger:(NSInteger)anInteger aFloat:(float)aFloat;
 @end
@@ -42,15 +46,65 @@ typedef void(^GDRSMockedTestClassBlock)(NSUInteger index);
     [super tearDown];
 }
 
-- (void)testIntegerHandling {
+- (void)testReturningInteger {
+    
+    GDRSMockedTestClass<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSMockedTestClass new] forwardCalls:NO setupBlock:^(GDRSMock *mock) {
+        [mock gdrs_mock_setResponderForSelector:@selector(integerProp) block:^(GDRSMockMethodCall *methodCall) {
+            [methodCall setIntegerRetrunValue:3];
+        }];
+    }];
+    
+    XCTAssertEqual(mock.integerProp, (NSInteger)3, @"Testing returning integer has failed. Returned value is %i, while it should have been 2.", mock.integerProp);
+    
+}
+
+- (void)testReturningUInteger {
 
      GDRSMockedTestClass<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSMockedTestClass new] forwardCalls:NO setupBlock:^(GDRSMock *mock) {
-        [mock gdrs_mock_setResponderForSelector:@selector(integerProp) block:^(GDRSMockMethodCall *methodCall) {
+        [mock gdrs_mock_setResponderForSelector:@selector(uIntegerProp) block:^(GDRSMockMethodCall *methodCall) {
             [methodCall setUIntegerRetrunValue:2];
         }];
     }];
     
-    XCTAssertEqual(mock.integerProp, (NSUInteger)2, @"Testing in integer property has failed. Returned value is %i, while it should have been 2.", mock.integerProp);
+    XCTAssertEqual(mock.uIntegerProp, (NSUInteger)2, @"Testing returning unsigned integer has failed. Returned value is %i, while it should have been 2.", mock.uIntegerProp);
+}
+
+- (void)testReturningFloat {
+    
+    GDRSMockedTestClass<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSMockedTestClass new] forwardCalls:NO setupBlock:^(GDRSMock *mock) {
+        [mock gdrs_mock_setResponderForSelector:@selector(floatProp) block:^(GDRSMockMethodCall *methodCall) {
+            [methodCall setFloatRetrunValue:3.5];
+        }];
+    }];
+    
+    XCTAssertEqualWithAccuracy(mock.floatProp, (float)3.5, 0.001, @"Testing returning float has failed. Returned value is %f, while it should have been 2.", mock.floatProp);
+    
+}
+
+- (void)testReturningDoube {
+    
+    GDRSMockedTestClass<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSMockedTestClass new] forwardCalls:NO setupBlock:^(GDRSMock *mock) {
+        [mock gdrs_mock_setResponderForSelector:@selector(doubleProp) block:^(GDRSMockMethodCall *methodCall) {
+            [methodCall setDoubleRetrunValue:4.5];
+        }];
+    }];
+    
+    XCTAssertEqualWithAccuracy(mock.doubleProp, (double)4.5, 0.001, @"Testing returning double has failed. Returned value is %f, while it should have been 2.", mock.doubleProp);
+    
+}
+
+- (void) testReturningObject {
+    
+    NSObject *expectedObject = [NSObject new];
+    
+    GDRSMockedTestClass<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSMockedTestClass new] forwardCalls:NO setupBlock:^(GDRSMock *mock) {
+        [mock gdrs_mock_setResponderForSelector:@selector(objectProp) block:^(GDRSMockMethodCall *methodCall) {
+            [methodCall setObjectRetrunValue:expectedObject];
+        }];
+    }];
+    
+    XCTAssertEqual(mock.objectProp, expectedObject, @"Testing returning object has failed. Returned value is %@, while it should have been %@.", mock.objectProp, expectedObject);
+    
 }
 
 - (void)testRetrivingBlockArgument {
