@@ -13,12 +13,13 @@
 
 typedef void(^GDRSMockSelectorResponderBlock)(GDRSMockMethodCall *methodCall);
 
-@interface GDRSMock : NSProxy
-
-+ (id)mockWithMockedObject:(id)mockedObject forwardCalls:(BOOL)forwardCalls setupBlock:(void(^)(GDRSMock *mock))setupBlock;
+@protocol GDRSMock<NSObject>
 - (void)gdrs_mock_setResponderForSelector:(SEL)aSelector block:(GDRSMockSelectorResponderBlock)responderBlock;
 - (NSArray *)gdrs_mock_callLogForSelector:(SEL)aSelector;
+@end
 
+@interface GDRSMock : NSProxy<GDRSMock>
++ (id)mockWithMockedObject:(id)mockedObject forwardCalls:(BOOL)forwardCalls setupBlock:(void(^)(GDRSMock *mock))setupBlock;
 @end
 
 
