@@ -9,32 +9,6 @@
 #import "GDRSMock.h"
 
 
-
-@interface GDRSMockCallLog ()
-@property (nonatomic) NSMutableArray *internalInvocationList;
-@end
-
-@implementation GDRSMockCallLog
-
-- (id)init {
-    self = [super init];
-    if (self) {
-        _internalInvocationList = [NSMutableArray new];
-    }
-    return self;
-}
-
-- (NSArray *)calls {
-    return self.internalInvocationList;
-}
-
-@end
-
-
-
-#pragma mark -
-
-
 @interface GDRSMockCallLogMap : NSObject
 @property (nonatomic) NSMutableDictionary *callLogDictionary;
 @end
@@ -49,7 +23,7 @@
     return self;
 }
 
-- (GDRSMockCallLog *)callLogForSelector:(SEL)selector {
+- (NSArray *)callLogForSelector:(SEL)selector {
     NSString *selectorName = NSStringFromSelector(selector);
     return self.callLogDictionary[selectorName];
 }
@@ -167,7 +141,7 @@
 
 #pragma mark Call log
 
-- (GDRSMockCallLog *)gdrs_mock_callLogForSelector:(SEL)aSelector {
+- (NSArray *)gdrs_mock_callLogForSelector:(SEL)aSelector {
     return [self.gdrs_mock_callLogMap callLogForSelector:aSelector];
 }
 

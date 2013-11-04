@@ -11,27 +11,13 @@
 
 @class GDRSMock;
 
-
-
-@interface GDRSMockCallLog : NSObject
-
-@property (nonatomic) SEL selector;
-@property (nonatomic, readonly) NSArray *invocations;
-
-@end
-
-
-
-#pragma mark -
-
-
 typedef void(^GDRSMockSelectorResponderBlock)(GDRSMockMethodCall *methodCall);
 
 @interface GDRSMock : NSProxy
 
 + (id)mockWithMockedObject:(id)mockedObject forwardCalls:(BOOL)forwardCalls setupBlock:(void(^)(GDRSMock *mock))setupBlock;
 - (void)gdrs_mock_setResponderForSelector:(SEL)aSelector block:(GDRSMockSelectorResponderBlock)responderBlock;
-- (GDRSMockCallLog *)gdrs_mock_callLogForSelector:(SEL)aSelector;
+- (NSArray *)gdrs_mock_callLogForSelector:(SEL)aSelector;
 
 @end
 
