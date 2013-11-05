@@ -23,6 +23,10 @@
 
 #pragma mark Retrun value
 
+- (void)setBOOLReturnValue:(BOOL)returnValue {
+    [self.invocation setReturnValue:&returnValue];
+}
+
 - (void)setIntegerReturnValue:(NSInteger)returnValue {
     [self.invocation setReturnValue:&returnValue];
 }

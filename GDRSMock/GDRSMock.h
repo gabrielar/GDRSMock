@@ -69,6 +69,19 @@ typedef void(^GDRSMockSelectorResponderBlock)(GDRSMockMethodCall *methodCall);
 @interface GDRSMock : NSProxy<GDRSMock>
 
 /*!
+ Initialises a mock object with the specified real object and setup block.
+ The mock object will not forward the messages not handled by it self to
+ the mocked (real) object.
+ @param mockedObject
+ The real object for which this mocked object stands in.
+ @param setupBlock
+ This block is called after the initialisation of the mock object. In here
+ the mock can be initialised further, by for example setting responders for
+ selectors with gdrs_mock_setResponderForSelector:block:.
+ */
++ (id)mockWithMockedObject:(id)mockedObject setupBlock:(void(^)(GDRSMock *mock))setupBlock;
+
+/*!
  Initialises a mock object with the specified real object and setup block. The 
  caller can also specify whether the mock object forwards the messages not 
  handled by it self to the mocked (real) object.

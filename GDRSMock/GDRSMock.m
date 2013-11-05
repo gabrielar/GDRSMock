@@ -75,6 +75,10 @@
     return [[self alloc] initWithMockedObject:mockedObject forwardMessages:forwardMessages setupBlock:setupBlock];
 }
 
++ (id)mockWithMockedObject:(id)mockedObject setupBlock:(void(^)(GDRSMock *mock))setupBlock {
+    return [self mockWithMockedObject:mockedObject forwardMessages:NO setupBlock:setupBlock];
+}
+
 
 #pragma mark NSProxy implementation
 

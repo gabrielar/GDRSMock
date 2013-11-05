@@ -45,6 +45,16 @@
 #pragma mark Return value
 
 /*!
+ Sets the return value of the invocation to the specified argument of
+ type BOOL.
+ @discussion  This is a convenience up method for setReturnValue:
+    of NSInvocation which it wraps.
+ @param returnValue
+    The return value to be set.
+ */
+- (void)setBOOLReturnValue:(BOOL)returnValue;
+
+/*!
  Sets the return value of the invocation to the specified argument of 
  type NSInteger.
  @discussion  This is a convenience up method for setReturnValue: 
