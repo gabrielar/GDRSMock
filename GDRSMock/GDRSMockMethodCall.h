@@ -12,13 +12,16 @@
 
 
 /*!
- Represents a call to a mock object, and provides convenience methods
- for reading  its arguments, and setting the return value.
+ Represents a message to a mock object. It encapsulates the 
+ NSInvocation object resulting from the message and provides
+ convenience methods for reading its arguments, and setting 
+ the return value.
  */
 @interface GDRSMockMethodCall : NSObject
 
 /*!
- The mock object
+ The mock object which is the receiver of the message represented by
+ this object.
  */
 @property (nonatomic) GDRSMock *mock;
 
@@ -28,7 +31,8 @@
 @property (nonatomic) id mockedObject;
 
 /*!
- The invocation resorting from the method call.
+ The invocation resulting from the message being sent to a
+ object of this class.
  */
 @property (nonatomic) NSInvocation *invocation;
 
@@ -38,58 +42,64 @@
 + (id)methodCallWithInvocation:(NSInvocation *)invocation mock:(GDRSMock *)mock mockedObject:(id)mockedObject;
 
 
-#pragma mark Retrun value
+#pragma mark Return value
 
 /*!
- Sets the return value to the specified argument of type NSInteger.
+ Sets the return value of the invocation to the specified argument of 
+ type NSInteger.
  @discussion  This is a convenience up method for setReturnValue: 
     of NSInvocation which it wraps.
- @param retrunValue
+ @param returnValue
     The return value to be set.
  */
-- (void)setIntegerRetrunValue:(NSInteger)retrunValue;
+- (void)setIntegerReturnValue:(NSInteger)returnValue;
 
 /*!
- Sets the return value to the specified argument of type NSUInteger.
+ Sets the return value of the invocation to the specified argument of 
+ type NSUInteger.
  @discussion This is a convenience up method for setReturnValue:
     of NSInvocation which it wraps.
- @param retrunValue
+ @param returnValue
     The return value to be set.
  */
-- (void)setUIntegerRetrunValue:(NSUInteger)retrunValue;
+- (void)setUIntegerReturnValue:(NSUInteger)returnValue;
 
 /*!
- Sets the return value to the specified argument of type float.
+ Sets the return value of the invocation to the specified argument of 
+ type float.
  @discussion This is a convenience up method for setReturnValue:
     of NSInvocation which it wraps.
- @arg retrunValue
+ @arg returnValue
     The return value to be set.
  */
-- (void)setFloatRetrunValue:(float)retrunValue;
+- (void)setFloatReturnValue:(float)returnValue;
 
 /*!
- Sets the return value to the specified argument of type double.
+ Sets the return value of the invocation to the specified argument of 
+ type double.
  @discussion This is a convenience up method for setReturnValue:
     of NSInvocation which it wraps.
- @arg retrunValue
+ @arg returnValue
     The return value to be set.
  */
-- (void)setDoubleRetrunValue:(double)retrunValue;
+- (void)setDoubleReturnValue:(double)returnValue;
 
 /*!
- Sets the return value to the specified argument of type id.
+ Sets the return value of the invocation to the specified argument of 
+ type id.
  @discussion This is a convenience up method for setReturnValue:
     of NSInvocation which it wraps.
- @arg retrunValue
+ @arg returnValue
     The return value to be set.
  */
-- (void)setObjectRetrunValue:(id)retrunValue;
+- (void)setObjectReturnValue:(id)returnValue;
 
 
 #pragma mark Arguments
 
 /*!
- Returns the argument at the specified index as an NSInteger.
+ Returns the argument of the invocation situated at the specified index
+ as an NSInteger.
  @discussion This is a convenience up method for getArgument:atIndex:
     which it  wraps.
  @return
@@ -98,7 +108,8 @@
 - (NSInteger)getIntegerArgumentAtIndex:(NSInteger)idx;
 
 /*!
- Returns the argument at the specified index as an NSInteger.
+ Returns the argument of the invocation situated at the specified index
+ as an NSUInteger.
  @discussion This is a convenience up method for getArgument:atIndex:
     of NSInvocation which it wraps.
  @return
@@ -107,7 +118,8 @@
 - (NSUInteger)getUIntegerArgumentAtIndex:(NSInteger)idx;
 
 /*!
- Returns the argument at the specified index as an NSUInteger.
+ Returns the argument of the invocation situated at the specified index
+ as an float.
  @discussion This is a convenience up method for getArgument:atIndex:
     of NSInvocation which it wraps.
  @return
@@ -116,7 +128,8 @@
 - (float)getFloatArgumentAtIndex:(NSInteger)idx;
 
 /*!
- Returns the argument at the specified index as an float.
+ Returns the argument of the invocation situated at the specified index
+ as an double.
  @discussion This is a convenience up method for getArgument:atIndex:
     of NSInvocation which it wraps.
  @return
@@ -125,7 +138,8 @@
 - (double)getDoubleArgumentAtIndex:(NSInteger)idx;
 
 /*!
- Returns the argument at the specified index as an double.
+ Returns the argument of the invocation situated at the specified index
+ as an Objective-C object.
  @discussion This is a convenience up method for getArgument:atIndex:
     of NSInvocation which it wraps.
  @return
@@ -134,3 +148,5 @@
 - (id)getObjectArgumentAtIndex:(NSInteger)idx;
 
 @end
+
+

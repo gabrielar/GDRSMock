@@ -52,17 +52,17 @@
 
 @interface GDRSMock ()
 @property (nonatomic) id gdrs_mock_mokedObject;
-@property (nonatomic) BOOL gdrs_mock_forwardCalls;
+@property (nonatomic) BOOL gdrs_mock_forwardMessages;
 @property (nonatomic) NSMutableDictionary *gdrs_mock_selectorBlocks;
 @property (nonatomic) GDRSMockCallLogMap *gdrs_mock_callLogMap;
 @end
 
 @implementation GDRSMock
 
-- (id)initWithMockedObject:(id)mockedObject forwardCalls:(BOOL)forwardCalls setupBlock:(void(^)(GDRSMock *mock))setupBlock
+- (id)initWithMockedObject:(id)mockedObject forwardMessages:(BOOL)forwardMessages setupBlock:(void(^)(GDRSMock *mock))setupBlock
 {
     _gdrs_mock_mokedObject = mockedObject;
-    _gdrs_mock_forwardCalls = forwardCalls;
+    _gdrs_mock_forwardMessages = forwardMessages;
     _gdrs_mock_selectorBlocks = [NSMutableDictionary new];
     _gdrs_mock_callLogMap = [GDRSMockCallLogMap new];
     if (setupBlock) {
@@ -71,8 +71,8 @@
     return self;
 }
 
-+ (id)mockWithMockedObject:(id)mockedObject forwardCalls:(BOOL)forwardCalls setupBlock:(void(^)(GDRSMock *mock))setupBlock {
-    return [[self alloc] initWithMockedObject:mockedObject forwardCalls:forwardCalls setupBlock:setupBlock];
++ (id)mockWithMockedObject:(id)mockedObject forwardMessages:(BOOL)forwardMessages setupBlock:(void(^)(GDRSMock *mock))setupBlock {
+    return [[self alloc] initWithMockedObject:mockedObject forwardMessages:forwardMessages setupBlock:setupBlock];
 }
 
 
@@ -125,7 +125,7 @@
     }
     else {
         
-        if (self.gdrs_mock_forwardCalls) {
+        if (self.gdrs_mock_forwardMessages) {
             [self.gdrs_mock_callLogMap logCallWithInvocation:[GDRSMockMethodCall methodCallWithInvocation:invocation mock:self mockedObject:self.gdrs_mock_mokedObject]];
             [invocation invokeWithTarget:self.gdrs_mock_mokedObject];
         }
@@ -146,6 +146,5 @@
 }
 
 @end
-
 
 

@@ -48,9 +48,9 @@ typedef void(^GDRSMockedTestClassBlock)(NSUInteger index);
 
 - (void)testReturningInteger {
     
-    GDRSMockedTestClass<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSMockedTestClass new] forwardCalls:NO setupBlock:^(GDRSMock *mock) {
+    GDRSMockedTestClass<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSMockedTestClass new] forwardMessages:NO setupBlock:^(GDRSMock *mock) {
         [mock gdrs_mock_setResponderForSelector:@selector(integerProp) block:^(GDRSMockMethodCall *methodCall) {
-            [methodCall setIntegerRetrunValue:3];
+            [methodCall setIntegerReturnValue:3];
         }];
     }];
     
@@ -60,9 +60,9 @@ typedef void(^GDRSMockedTestClassBlock)(NSUInteger index);
 
 - (void)testReturningUInteger {
 
-     GDRSMockedTestClass<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSMockedTestClass new] forwardCalls:NO setupBlock:^(GDRSMock *mock) {
+     GDRSMockedTestClass<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSMockedTestClass new] forwardMessages:NO setupBlock:^(GDRSMock *mock) {
         [mock gdrs_mock_setResponderForSelector:@selector(uIntegerProp) block:^(GDRSMockMethodCall *methodCall) {
-            [methodCall setUIntegerRetrunValue:2];
+            [methodCall setUIntegerReturnValue:2];
         }];
     }];
     
@@ -71,9 +71,9 @@ typedef void(^GDRSMockedTestClassBlock)(NSUInteger index);
 
 - (void)testReturningFloat {
     
-    GDRSMockedTestClass<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSMockedTestClass new] forwardCalls:NO setupBlock:^(GDRSMock *mock) {
+    GDRSMockedTestClass<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSMockedTestClass new] forwardMessages:NO setupBlock:^(GDRSMock *mock) {
         [mock gdrs_mock_setResponderForSelector:@selector(floatProp) block:^(GDRSMockMethodCall *methodCall) {
-            [methodCall setFloatRetrunValue:3.5];
+            [methodCall setFloatReturnValue:3.5];
         }];
     }];
     
@@ -83,9 +83,9 @@ typedef void(^GDRSMockedTestClassBlock)(NSUInteger index);
 
 - (void)testReturningDoube {
     
-    GDRSMockedTestClass<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSMockedTestClass new] forwardCalls:NO setupBlock:^(GDRSMock *mock) {
+    GDRSMockedTestClass<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSMockedTestClass new] forwardMessages:NO setupBlock:^(GDRSMock *mock) {
         [mock gdrs_mock_setResponderForSelector:@selector(doubleProp) block:^(GDRSMockMethodCall *methodCall) {
-            [methodCall setDoubleRetrunValue:4.5];
+            [methodCall setDoubleReturnValue:4.5];
         }];
     }];
     
@@ -97,9 +97,9 @@ typedef void(^GDRSMockedTestClassBlock)(NSUInteger index);
     
     NSObject *expectedObject = [NSObject new];
     
-    GDRSMockedTestClass<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSMockedTestClass new] forwardCalls:NO setupBlock:^(GDRSMock *mock) {
+    GDRSMockedTestClass<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSMockedTestClass new] forwardMessages:NO setupBlock:^(GDRSMock *mock) {
         [mock gdrs_mock_setResponderForSelector:@selector(objectProp) block:^(GDRSMockMethodCall *methodCall) {
-            [methodCall setObjectRetrunValue:expectedObject];
+            [methodCall setObjectReturnValue:expectedObject];
         }];
     }];
     
@@ -110,7 +110,7 @@ typedef void(^GDRSMockedTestClassBlock)(NSUInteger index);
 - (void)testRetrivingBlockArgument {
     
     __block NSUInteger result = 0;
-     GDRSMockedTestClass<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSMockedTestClass new] forwardCalls:NO setupBlock:^(GDRSMock *mock) {
+     GDRSMockedTestClass<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSMockedTestClass new] forwardMessages:NO setupBlock:^(GDRSMock *mock) {
         [mock gdrs_mock_setResponderForSelector:@selector(blockMethod:) block:^(GDRSMockMethodCall *methodCall) {
             GDRSMockedTestClassBlock blockArg = [methodCall getObjectArgumentAtIndex:0];
             blockArg(5);
@@ -126,7 +126,7 @@ typedef void(^GDRSMockedTestClassBlock)(NSUInteger index);
 
 - (void)testLoggingMethodCalls {
     
-    GDRSMockedTestClass<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSMockedTestClass new] forwardCalls:NO setupBlock:^(GDRSMock *mock) {
+    GDRSMockedTestClass<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSMockedTestClass new] forwardMessages:NO setupBlock:^(GDRSMock *mock) {
         [mock gdrs_mock_setResponderForSelector:@selector(logTestWithAnInteger:aFloat:) block:^(GDRSMockMethodCall *methodCall) { }];
     }];
     

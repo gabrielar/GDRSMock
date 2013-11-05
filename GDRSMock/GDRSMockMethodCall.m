@@ -23,24 +23,24 @@
 
 #pragma mark Retrun value
 
-- (void)setIntegerRetrunValue:(NSInteger)retrunValue {
-    [self.invocation setReturnValue:&retrunValue];
+- (void)setIntegerReturnValue:(NSInteger)returnValue {
+    [self.invocation setReturnValue:&returnValue];
 }
 
-- (void)setUIntegerRetrunValue:(NSUInteger)retrunValue {
-    [self.invocation setReturnValue:&retrunValue];
+- (void)setUIntegerReturnValue:(NSUInteger)returnValue {
+    [self.invocation setReturnValue:&returnValue];
 }
 
-- (void)setFloatRetrunValue:(float)retrunValue {
-    [self.invocation setReturnValue:&retrunValue];
+- (void)setFloatReturnValue:(float)returnValue {
+    [self.invocation setReturnValue:&returnValue];
 }
 
-- (void)setDoubleRetrunValue:(double)retrunValue {
-    [self.invocation setReturnValue:&retrunValue];
+- (void)setDoubleReturnValue:(double)returnValue {
+    [self.invocation setReturnValue:&returnValue];
 }
 
-- (void)setObjectRetrunValue:(id)retrunValue {
-    [self.invocation setReturnValue:&retrunValue];
+- (void)setObjectReturnValue:(id)returnValue {
+    [self.invocation setReturnValue:&returnValue];
 }
 
 
@@ -78,3 +78,5 @@
 
 
 @end
+
+

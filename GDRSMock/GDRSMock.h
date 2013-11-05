@@ -13,14 +13,77 @@
 
 typedef void(^GDRSMockSelectorResponderBlock)(GDRSMockMethodCall *methodCall);
 
+
+
+/*!
+ Protocol implemented by all mock objects. Contains methods for customisation 
+ and inspection of the call log off a mock object.
+ @discussion Normally the variable pointing to a mock object should have the 
+ same type as the real object, however it is recommended that the variable 
+ type should also include this protocol. Eg. if the real object is of type 
+ SomeRealObject a variable pointing to a mock standing in for a object of 
+ SomeRealObject class should be of type SomeRealObject<GDRSMock>. This way 
+ the mock object will accept messages for the real object, as well as for 
+ the mock object, without generating any compiler warnings or errors. Also 
+ the code completion will work for both cases.
+ */
 @protocol GDRSMock<NSObject>
+
+/*!
+ Registers a block with the mock object. This block is then executed when the
+ a message for the specified selector is send to the mock object.
+ @param aSelector
+    The selector for which the block is registered.
+ @param responderBlock
+    The block which is executed when the a message corresponding to the aSelector
+    is sent.
+ */
 - (void)gdrs_mock_setResponderForSelector:(SEL)aSelector block:(GDRSMockSelectorResponderBlock)responderBlock;
+
+/*!
+ Returns an array of GDRSMethodCall objects. These objects represent the messages 
+ send to the mock object for the specified selector. Ordering is chronological.
+ @param aSelector
+    The GDRSMethodCall objects represent messages sent for this selector only.
+ @return
+    An array of GDRSMethodCall objects.
+ */
 - (NSArray *)gdrs_mock_callLogForSelector:(SEL)aSelector;
+
 @end
 
+
+
+/*!
+ Mimics the interface up of a real object, however it is possible to alter
+ the mock object behaviour compared to the real object. This aids unit testing.
+ @discussion Normally the variable pointing to a mock object should have the
+ same type as the real object, however it is recommended that the variable
+ type should also include this protocol. Eg. if the real object is of type
+ SomeRealObject a variable pointing to a mock standing in for a object of
+ SomeRealObject class should be of type SomeRealObject<GDRSMock>. This way
+ the mock object will accept messages for the real object, as well as for
+ the mock object, without generating any compiler warnings or errors. Also
+ the code completion will work for both cases.
+ */
 @interface GDRSMock : NSProxy<GDRSMock>
-+ (id)mockWithMockedObject:(id)mockedObject forwardCalls:(BOOL)forwardCalls setupBlock:(void(^)(GDRSMock *mock))setupBlock;
-@end
 
+/*!
+ Initialises a mock object with the specified real object and setup block. The 
+ caller can also specify whether the mock object forwards the messages not 
+ handled by it self to the mocked (real) object.
+ @param mockedObject
+    The real object for which this mocked object stands in.
+ @param forwardMessages
+    If true the mock object will forward the messages not handled by it self
+    to the real object (mocked object).
+ @param setupBlock
+    This block is called after the initialisation of the mock object. In here
+    the mock can be initialised further, by for example setting responders for
+    selectors with gdrs_mock_setResponderForSelector:block:.
+ */
++ (id)mockWithMockedObject:(id)mockedObject forwardMessages:(BOOL)forwardMessages setupBlock:(void(^)(GDRSMock *mock))setupBlock;
+
+@end
 
 
