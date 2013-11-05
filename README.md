@@ -22,14 +22,14 @@ Step by step instructions:
 	does not matter where exactly. 
 1.	Open your project in XCode. 
 1.	In XCode (with your project open) select the group which you wish to contain
-	the GDRSMock project, and bring up it's the context menu. 
-1.	In the context menu select 'Add files to "<your_project_name>"...' 
+	the GDRSMock project, and bring up it's context menu. 
+1.	In the context menu select 'Add files to "<< your project name >>"...' 
 1.	Select the GDRSMock project file (ie. GDRSMock.xcodeproj), and click the 'Add'
 	button. 
 1.	Go to the 'Build Phases' of your project, and select the tests target.
 1.	Add the GDRSMock library to the 'Target Dependencies'.
 1.	Go to the 'Build Settings' of your project, and select the tests target.
-1.	Add '$(BUILT_PRODUCTS_DIR)' to the 'Header Search Path' and 'Library Search Path'.
+1.	Add '$(BUILT_PRODUCTS_DIR)' to the 'Header Search Path' and to the 'Library Search Path'.
 
 
 
