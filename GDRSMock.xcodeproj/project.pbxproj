@@ -17,6 +17,7 @@
 		788E0A221826EBB200AC5C72 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 788E0A201826EBB200AC5C72 /* InfoPlist.strings */; };
 		788E0A241826EBB200AC5C72 /* GDRSMockTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 788E0A231826EBB200AC5C72 /* GDRSMockTests.m */; };
 		788E0A30182713CE00AC5C72 /* GDRSMockMethodCall.m in Sources */ = {isa = PBXBuildFile; fileRef = 788E0A2F182713CE00AC5C72 /* GDRSMockMethodCall.m */; };
+		789A4488182991E1001E48C9 /* GDRSMockMethodCall.h in CopyFiles */ = {isa = PBXBuildFile; fileRef = 788E0A2E182713CE00AC5C72 /* GDRSMockMethodCall.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +37,7 @@
 			dstPath = "include/$(PRODUCT_NAME)";
 			dstSubfolderSpec = 16;
 			files = (
+				789A4488182991E1001E48C9 /* GDRSMockMethodCall.h in CopyFiles */,
 				788E0A0D1826EBB200AC5C72 /* GDRSMock.h in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -427,6 +429,7 @@
 				788E0A291826EBB200AC5C72 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		788E0A2A1826EBB200AC5C72 /* Build configuration list for PBXNativeTarget "GDRSMockTests" */ = {
 			isa = XCConfigurationList;
@@ -435,6 +438,7 @@
 				788E0A2C1826EBB200AC5C72 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

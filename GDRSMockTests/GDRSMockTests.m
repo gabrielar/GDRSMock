@@ -127,13 +127,13 @@ typedef void(^GDRSRealObjectBlock)(NSUInteger index);
 - (void)testLoggingMethodCalls {
     
     GDRSRealObject<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSRealObject new] forwardMessages:NO setupBlock:^(GDRSMock *mock) {
-        [mock gdrs_mock_setResponderForSelector:@selector(logTestWithAnInteger:aFloat:) block:^(GDRSMockMethodCall *methodCall) { }];
+        [mock gdrs_mock_setResponderForSelector:@selector(anInteger:andAFloat:) block:^(GDRSMockMethodCall *methodCall) { }];
     }];
     
     [mock anInteger:2 andAFloat:3.0];
     [mock anInteger:5 andAFloat:6.5];
     
-    NSArray *callLog = [mock gdrs_mock_callLogForSelector:@selector(logTestWithAnInteger:aFloat:)];
+    NSArray *callLog = [mock gdrs_mock_callLogForSelector:@selector(anInteger:andAFloat:)];
     XCTAssertEqual([callLog count], (NSUInteger)2, @"");
     
     GDRSMockMethodCall *methodCall = nil;

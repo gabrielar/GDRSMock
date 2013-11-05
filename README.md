@@ -7,7 +7,6 @@ GDRSMock simply stands-in the real object (mocked object) and let's the messages
 on behalf of the real object.
 
 
-# Test
 
 
 
