@@ -12,9 +12,10 @@ Installation
 
 The GDRSMock has a library target. Hence all that needs to be done is to copy
 the contents of the GDRSMock library into your project directory, and add the
-GDRSMock to your project. Then the test target in your project need to be made
-dependent on the lib target from the GDRSMock project. Also make sure that the
-header and library search paths of your project include '$(BUILT_PRODUCTS_DIR)'.
+GDRSMock to your project. Then the test target in your project need to link to
+the GDRSMock lib and to be made dependent on the lib target from the GDRSMock
+project. Also make sure that the header and library search paths of your project
+include '$(BUILT_PRODUCTS_DIR)', and that 'Other Linker Flags' contains '-ObjC'.
 
 Step by step instructions:
 
@@ -28,8 +29,10 @@ Step by step instructions:
 	button. 
 1.	Go to the 'Build Phases' of your project, and select the tests target.
 1.	Add the GDRSMock library to the 'Target Dependencies'.
+1.	Add the 'libGDRSMock.a' to 'Link Binary With Libraries'
 1.	Go to the 'Build Settings' of your project, and select the tests target.
 1.	Add '$(BUILT_PRODUCTS_DIR)' to the 'Header Search Path' and to the 'Library Search Path'.
+1. 	Add '-ObjC' to 'Other Linker Flags'.
 
 
 
