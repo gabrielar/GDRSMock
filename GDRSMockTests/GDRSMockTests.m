@@ -48,10 +48,10 @@ typedef void(^GDRSRealObjectBlock)(NSUInteger index);
 
 - (void)testReturningInteger {
     
-    GDRSRealObject<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSRealObject new] forwardMessages:NO setupBlock:^(GDRSMock *mock) {
-        [mock gdrs_mock_setResponderForSelector:@selector(integerProp) block:^(GDRSMockMethodCall *methodCall) {
-            [methodCall setIntegerReturnValue:3];
-        }];
+    usleep(2e5); // Work arround a possible XCode timing bug.
+    
+    GDRSRealObject<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSRealObject new] setupBlock:^(GDRSMock *mock, GDRSMockStub *stub) {
+        [stub setIntegerRetVal:3 forSel:@selector(integerProp)];
     }];
     
     XCTAssertEqual(mock.integerProp, (NSInteger)3, @"Testing returning integer has failed. Returned value is %i, while it should have been 2.", mock.integerProp);
@@ -60,10 +60,10 @@ typedef void(^GDRSRealObjectBlock)(NSUInteger index);
 
 - (void)testReturningUInteger {
 
-     GDRSRealObject<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSRealObject new] forwardMessages:NO setupBlock:^(GDRSMock *mock) {
-        [mock gdrs_mock_setResponderForSelector:@selector(uIntegerProp) block:^(GDRSMockMethodCall *methodCall) {
-            [methodCall setUIntegerReturnValue:2];
-        }];
+    usleep(2e5); // Work arround a possible XCode timing bug.
+    
+    GDRSRealObject<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSRealObject new] setupBlock:^(GDRSMock *mock, GDRSMockStub *stub) {
+        [stub setUIntegerRetVal:2 forSel:@selector(uIntegerProp)];
     }];
     
     XCTAssertEqual(mock.uIntegerProp, (NSUInteger)2, @"Testing returning unsigned integer has failed. Returned value is %i, while it should have been 2.", mock.uIntegerProp);
@@ -71,10 +71,10 @@ typedef void(^GDRSRealObjectBlock)(NSUInteger index);
 
 - (void)testReturningFloat {
     
-    GDRSRealObject<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSRealObject new] forwardMessages:NO setupBlock:^(GDRSMock *mock) {
-        [mock gdrs_mock_setResponderForSelector:@selector(floatProp) block:^(GDRSMockMethodCall *methodCall) {
-            [methodCall setFloatReturnValue:3.5];
-        }];
+    usleep(2e5); // Work arround a possible XCode timing bug.
+    
+    GDRSRealObject<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSRealObject new] setupBlock:^(GDRSMock *mock, GDRSMockStub *stub) {
+        [stub setFloatRetVal:3.5 forSel:@selector(floatProp)];
     }];
     
     XCTAssertEqualWithAccuracy(mock.floatProp, (float)3.5, 0.001, @"Testing returning float has failed. Returned value is %f, while it should have been 2.", mock.floatProp);
@@ -83,10 +83,10 @@ typedef void(^GDRSRealObjectBlock)(NSUInteger index);
 
 - (void)testReturningDoube {
     
-    GDRSRealObject<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSRealObject new] forwardMessages:NO setupBlock:^(GDRSMock *mock) {
-        [mock gdrs_mock_setResponderForSelector:@selector(doubleProp) block:^(GDRSMockMethodCall *methodCall) {
-            [methodCall setDoubleReturnValue:4.5];
-        }];
+    usleep(2e5); // Work arround a possible XCode timing bug.
+    
+    GDRSRealObject<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSRealObject new] setupBlock:^(GDRSMock *mock, GDRSMockStub *stub) {
+        [stub setDoubleRetVal:4.5 forSel:@selector(doubleProp)];
     }];
     
     XCTAssertEqualWithAccuracy(mock.doubleProp, (double)4.5, 0.001, @"Testing returning double has failed. Returned value is %f, while it should have been 2.", mock.doubleProp);
@@ -95,12 +95,12 @@ typedef void(^GDRSRealObjectBlock)(NSUInteger index);
 
 - (void) testReturningObject {
     
+    usleep(2e5); // Work arround a possible XCode timing bug.
+    
     NSObject *expectedObject = [NSObject new];
     
-    GDRSRealObject<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSRealObject new] forwardMessages:NO setupBlock:^(GDRSMock *mock) {
-        [mock gdrs_mock_setResponderForSelector:@selector(objectProp) block:^(GDRSMockMethodCall *methodCall) {
-            [methodCall setObjectReturnValue:expectedObject];
-        }];
+    GDRSRealObject<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSRealObject new] setupBlock:^(GDRSMock *mock, GDRSMockStub *stub) {
+        [stub setObjectRetVal:expectedObject forSel:@selector(objectProp)];
     }];
     
     XCTAssertEqual(mock.objectProp, expectedObject, @"Testing returning object has failed. Returned value is %@, while it should have been %@.", mock.objectProp, expectedObject);
@@ -109,9 +109,12 @@ typedef void(^GDRSRealObjectBlock)(NSUInteger index);
 
 - (void)testRetrivingBlockArgument {
     
+    usleep(2e5); // Work arround a possible XCode timing bug.
+    
     __block NSUInteger result = 0;
-     GDRSRealObject<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSRealObject new] forwardMessages:NO setupBlock:^(GDRSMock *mock) {
-        [mock gdrs_mock_setResponderForSelector:@selector(blockMethod:) block:^(GDRSMockMethodCall *methodCall) {
+    
+    GDRSRealObject<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSRealObject new] setupBlock:^(GDRSMock *mock, GDRSMockStub *stub) {
+        [stub forSel:@selector(blockMethod:) setResponder:^(GDRSMockMethodCall *methodCall) {
             GDRSRealObjectBlock blockArg = [methodCall getObjectArgumentAtIndex:0];
             blockArg(5);
         }];
@@ -126,8 +129,10 @@ typedef void(^GDRSRealObjectBlock)(NSUInteger index);
 
 - (void)testLoggingMethodCalls {
     
-    GDRSRealObject<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSRealObject new] forwardMessages:NO setupBlock:^(GDRSMock *mock) {
-        [mock gdrs_mock_setResponderForSelector:@selector(anInteger:andAFloat:) block:^(GDRSMockMethodCall *methodCall) { }];
+    usleep(2e5); // Work arround a possible XCode timing bug.
+    
+    GDRSRealObject<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSRealObject new] setupBlock:^(GDRSMock *mock, GDRSMockStub *stub) {
+        [stub forSel:@selector(anInteger:andAFloat:) setResponder:^(GDRSMockMethodCall *methodCall) { }];
     }];
     
     [mock anInteger:2 andAFloat:3.0];

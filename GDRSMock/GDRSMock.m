@@ -50,32 +50,135 @@
 #pragma mark -
 
 
-@interface GDRSMock ()
-@property (nonatomic) id gdrs_mock_mokedObject;
-@property (nonatomic) BOOL gdrs_mock_forwardMessages;
-@property (nonatomic) NSMutableDictionary *gdrs_mock_selectorBlocks;
-@property (nonatomic) GDRSMockCallLogMap *gdrs_mock_callLogMap;
+@interface GDRSMockStub ()
+@property (nonatomic) id mokedObject;
+@property (nonatomic) BOOL forwardMessages;
+@property (nonatomic) NSMutableDictionary *selectorBlocks;
+@property (nonatomic) GDRSMockCallLogMap *callLogMap;
 @end
 
-@implementation GDRSMock
+@implementation GDRSMockStub
 
-- (id)initWithMockedObject:(id)mockedObject forwardMessages:(BOOL)forwardMessages setupBlock:(void(^)(GDRSMock *mock))setupBlock
-{
-    _gdrs_mock_mokedObject = mockedObject;
-    _gdrs_mock_forwardMessages = forwardMessages;
-    _gdrs_mock_selectorBlocks = [NSMutableDictionary new];
-    _gdrs_mock_callLogMap = [GDRSMockCallLogMap new];
-    if (setupBlock) {
-        setupBlock(self);
+- (id)init {
+    self = [super init];
+    if (self) {
+        _selectorBlocks = [NSMutableDictionary new];
+        _callLogMap = [GDRSMockCallLogMap new];
     }
     return self;
 }
 
-+ (id)mockWithMockedObject:(id)mockedObject forwardMessages:(BOOL)forwardMessages setupBlock:(void(^)(GDRSMock *mock))setupBlock {
+#pragma mark Selector handling
+
+- (void)forSel:(SEL)aSelector setResponder:(GDRSMockSelectorResponderBlock)responderBlock {
+    NSString *selectorName = NSStringFromSelector(aSelector);
+    self.selectorBlocks[selectorName] = responderBlock;
+}
+
+- (void)respondToSelector:(SEL)selector invocation:(NSInvocation *)invocation {
+    
+    GDRSMock *mock = [invocation target];
+    NSString *selectorName = NSStringFromSelector(selector);
+    
+    GDRSMockSelectorResponderBlock responderBlock = self.selectorBlocks[selectorName];
+    if (responderBlock) {
+        
+        GDRSMockMethodCall *methodCall = [GDRSMockMethodCall methodCallWithInvocation:invocation mock:mock mockedObject:self.mokedObject];
+        [self.callLogMap logCallWithInvocation:methodCall];
+        responderBlock(methodCall);
+        
+    }
+    else {
+        
+        if (self.forwardMessages) {
+            [self.callLogMap logCallWithInvocation:[GDRSMockMethodCall methodCallWithInvocation:invocation mock:mock mockedObject:self.mokedObject]];
+            [invocation invokeWithTarget:self.mokedObject];
+        }
+        else {
+            NSAssert3(FALSE, @"Mock object for class %@ can not forward invocation %@ for selector %@", NSStringFromClass([self.mokedObject class]), invocation, selectorName);
+        }
+        
+    }
+    
+    
+}
+
+
+#pragma mark Call log
+
+- (NSArray *)callLogForSelector:(SEL)aSelector {
+    return [self.callLogMap callLogForSelector:aSelector];
+}
+
+
+#pragma mark Convenience methods
+
+- (void)setBOOLRetVal:(BOOL)value forSel:(SEL)aSelector {
+    [self forSel:aSelector setResponder:^(GDRSMockMethodCall *methodCall) {
+        [methodCall setBOOLReturnValue:value];
+    }];
+}
+
+- (void)setIntegerRetVal:(NSInteger)value forSel:(SEL)aSelector {
+    [self forSel:aSelector setResponder:^(GDRSMockMethodCall *methodCall) {
+        [methodCall setIntegerReturnValue:value];
+    }];
+}
+
+- (void)setUIntegerRetVal:(NSUInteger)value forSel:(SEL)aSelector {
+    [self forSel:aSelector setResponder:^(GDRSMockMethodCall *methodCall) {
+        [methodCall setUIntegerReturnValue:value];
+    }];
+}
+
+- (void)setFloatRetVal:(float)value forSel:(SEL)aSelector {
+    [self forSel:aSelector setResponder:^(GDRSMockMethodCall *methodCall) {
+        [methodCall setFloatReturnValue:value];
+    }];
+
+}
+
+- (void)setDoubleRetVal:(double)value forSel:(SEL)aSelector {
+    [self forSel:aSelector setResponder:^(GDRSMockMethodCall *methodCall) {
+        [methodCall setDoubleReturnValue:value];
+    }];
+}
+
+- (void)setObjectRetVal:(id)value forSel:(SEL)aSelector {
+    [self forSel:aSelector setResponder:^(GDRSMockMethodCall *methodCall) {
+        [methodCall setObjectReturnValue:value];
+    }];
+
+}
+
+@end
+
+
+
+#pragma mark -
+
+
+@interface GDRSMock ()
+@property (nonatomic) GDRSMockStub *gdrs_mock_stub;
+@end
+
+@implementation GDRSMock
+
+- (id)initWithMockedObject:(id)mockedObject forwardMessages:(BOOL)forwardMessages setupBlock:(GDRSMockSetupBlock)setupBlock {
+    _gdrs_mock_stub = [GDRSMockStub new];
+    _gdrs_mock_stub.mokedObject = mockedObject;
+    _gdrs_mock_stub.forwardMessages = forwardMessages;
+    if (setupBlock) {
+        setupBlock(self, _gdrs_mock_stub);
+    }
+    return self;
+}
+
++ (id)mockWithMockedObject:(id)mockedObject forwardMessages:(BOOL)forwardMessages setupBlock:(GDRSMockSetupBlock)setupBlock {
     return [[self alloc] initWithMockedObject:mockedObject forwardMessages:forwardMessages setupBlock:setupBlock];
 }
 
-+ (id)mockWithMockedObject:(id)mockedObject setupBlock:(void(^)(GDRSMock *mock))setupBlock {
++ (id)mockWithMockedObject:(id)mockedObject setupBlock:(GDRSMockSetupBlock)setupBlock {
     return [self mockWithMockedObject:mockedObject forwardMessages:NO setupBlock:setupBlock];
 }
 
@@ -83,71 +186,36 @@
 #pragma mark NSProxy implementation
 
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)sel {
-    return [self.gdrs_mock_mokedObject methodSignatureForSelector:sel];
+    return [self.gdrs_mock_stub.mokedObject methodSignatureForSelector:sel];
 }
 
 - (void)forwardInvocation:(NSInvocation *)invocation {
     
     SEL selector = [invocation selector];
-    if ([self.gdrs_mock_mokedObject respondsToSelector:selector]) {
+    if ([self.gdrs_mock_stub.mokedObject respondsToSelector:selector]) {
         
-        [self gdrs_mock_respondToSelector:selector invocation:invocation];
+        [self.gdrs_mock_stub respondToSelector:selector invocation:invocation];
         
     }
     else {
         
-        [super forwardInvocation:invocation];
+        NSAssert3(FALSE, @"Mock object for class %@ can not forward invocation %@ for selector %@", NSStringFromClass([self.gdrs_mock_stub.mokedObject class]), invocation, NSStringFromSelector(selector));
         
     }
     
 }
 
 - (BOOL)respondsToSelector:(SEL)aSelector {
-    return [self.gdrs_mock_mokedObject respondsToSelector:aSelector];
+    return [self.gdrs_mock_stub.mokedObject respondsToSelector:aSelector];
 }
 
 
-#pragma mark Selector handling
-
-- (void)gdrs_mock_setResponderForSelector:(SEL)aSelector block:(GDRSMockSelectorResponderBlock)responderBlock {
-    
-    NSString *selectorName = NSStringFromSelector(aSelector);
-    self.gdrs_mock_selectorBlocks[selectorName] = responderBlock;
-    
-}
-
-- (void)gdrs_mock_respondToSelector:(SEL)selector invocation:(NSInvocation *)invocation {
-    
-    NSString *selectorName = NSStringFromSelector(selector);
-    GDRSMockSelectorResponderBlock responderBlock = self.gdrs_mock_selectorBlocks[selectorName];
-    if (responderBlock) {
-        
-        GDRSMockMethodCall *methodCall = [GDRSMockMethodCall methodCallWithInvocation:invocation mock:self mockedObject:self.gdrs_mock_mokedObject];
-        [self.gdrs_mock_callLogMap logCallWithInvocation:methodCall];
-        responderBlock(methodCall);
-        
-    }
-    else {
-        
-        if (self.gdrs_mock_forwardMessages) {
-            [self.gdrs_mock_callLogMap logCallWithInvocation:[GDRSMockMethodCall methodCallWithInvocation:invocation mock:self mockedObject:self.gdrs_mock_mokedObject]];
-            [invocation invokeWithTarget:self.gdrs_mock_mokedObject];
-        }
-        else {
-            [super forwardInvocation:invocation];
-        }
-        
-    }
-    
-
-}
-
-
-#pragma mark Call log
+#pragma mark Convenience methods
 
 - (NSArray *)gdrs_mock_callLogForSelector:(SEL)aSelector {
-    return [self.gdrs_mock_callLogMap callLogForSelector:aSelector];
+    return [self.gdrs_mock_stub callLogForSelector:aSelector];
 }
+
 
 @end
 

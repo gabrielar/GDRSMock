@@ -9,9 +9,46 @@
 #import <Foundation/Foundation.h>
 #import "GDRSMockMethodCall.h"
 
-@class GDRSMock;
+@class GDRSMock, GDRSMockStub;
 
 typedef void(^GDRSMockSelectorResponderBlock)(GDRSMockMethodCall *methodCall);
+typedef void(^GDRSMockSetupBlock)(GDRSMock *mock, GDRSMockStub *stub);
+
+
+
+@interface GDRSMockStub : NSObject
+
+/*!
+ Registers a block with the mock object stub. This block is then executed when 
+ a message for the specified selector is send to the mock object.
+ @param aSelector
+    The selector for which the block is registered.
+ @param responderBlock
+    The block which is executed when the a message corresponding to aSelector 
+    is sent.
+ */
+- (void)forSel:(SEL)aSelector setResponder:(GDRSMockSelectorResponderBlock)responderBlock;
+
+/*!
+ Returns an array of GDRSMethodCall objects. These objects represent the 
+ messages send to the mock object related to this stub for the specified 
+ selector. Ordering is chronological.
+ @param aSelector
+    The GDRSMethodCall objects represent messages sent for this selector only.
+ @return
+    An array of GDRSMethodCall objects.
+ */
+- (NSArray *)callLogForSelector:(SEL)aSelector;
+
+- (void)setBOOLRetVal:(BOOL)value forSel:(SEL)aSelector;
+- (void)setIntegerRetVal:(NSInteger)value forSel:(SEL)aSelector;
+- (void)setUIntegerRetVal:(NSUInteger)value forSel:(SEL)aSelector;
+- (void)setFloatRetVal:(float)value forSel:(SEL)aSelector;
+- (void)setDoubleRetVal:(double)value forSel:(SEL)aSelector;
+- (void)setObjectRetVal:(id)value forSel:(SEL)aSelector;
+
+@end
+
 
 
 
@@ -29,24 +66,15 @@ typedef void(^GDRSMockSelectorResponderBlock)(GDRSMockMethodCall *methodCall);
  */
 @protocol GDRSMock<NSObject>
 
-/*!
- Registers a block with the mock object. This block is then executed when the
- a message for the specified selector is send to the mock object.
- @param aSelector
-    The selector for which the block is registered.
- @param responderBlock
-    The block which is executed when the a message corresponding to the aSelector
-    is sent.
- */
-- (void)gdrs_mock_setResponderForSelector:(SEL)aSelector block:(GDRSMockSelectorResponderBlock)responderBlock;
+@property (nonatomic, readonly) GDRSMockStub *gdrs_mock_stub;
 
 /*!
- Returns an array of GDRSMethodCall objects. These objects represent the messages 
+ Returns an array of GDRSMethodCall objects. These objects represent the messages
  send to the mock object for the specified selector. Ordering is chronological.
  @param aSelector
-    The GDRSMethodCall objects represent messages sent for this selector only.
+ The GDRSMethodCall objects represent messages sent for this selector only.
  @return
-    An array of GDRSMethodCall objects.
+ An array of GDRSMethodCall objects.
  */
 - (NSArray *)gdrs_mock_callLogForSelector:(SEL)aSelector;
 
@@ -79,7 +107,7 @@ typedef void(^GDRSMockSelectorResponderBlock)(GDRSMockMethodCall *methodCall);
  the mock can be initialised further, by for example setting responders for
  selectors with gdrs_mock_setResponderForSelector:block:.
  */
-+ (id)mockWithMockedObject:(id)mockedObject setupBlock:(void(^)(GDRSMock *mock))setupBlock;
++ (id)mockWithMockedObject:(id)mockedObject setupBlock:(GDRSMockSetupBlock)setupBlock;
 
 /*!
  Initialises a mock object with the specified real object and setup block. The 
@@ -95,7 +123,7 @@ typedef void(^GDRSMockSelectorResponderBlock)(GDRSMockMethodCall *methodCall);
     the mock can be initialised further, by for example setting responders for
     selectors with gdrs_mock_setResponderForSelector:block:.
  */
-+ (id)mockWithMockedObject:(id)mockedObject forwardMessages:(BOOL)forwardMessages setupBlock:(void(^)(GDRSMock *mock))setupBlock;
++ (id)mockWithMockedObject:(id)mockedObject forwardMessages:(BOOL)forwardMessages setupBlock:(GDRSMockSetupBlock)setupBlock;
 
 @end
 
