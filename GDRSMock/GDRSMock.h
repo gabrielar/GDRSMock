@@ -29,6 +29,8 @@ typedef void(^GDRSMockSetupBlock)(GDRSMock *mock, GDRSMockStub *stub);
  */
 - (void)forSel:(SEL)aSelector setResponder:(GDRSMockSelectorResponderBlock)responderBlock;
 
+- (void)setForwardSel:(SEL)aSelector;
+
 /*!
  Returns an array of GDRSMethodCall objects. These objects represent the 
  messages send to the mock object related to this stub for the specified 

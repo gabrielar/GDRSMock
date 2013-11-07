@@ -75,6 +75,13 @@
     self.selectorBlocks[selectorName] = responderBlock;
 }
 
+- (void)setForwardSel:(SEL)aSelector {
+    [self forSel:aSelector setResponder:^(GDRSMockMethodCall *methodCall) {
+        [methodCall.invocation invokeWithTarget:methodCall.mockedObject];
+    }];
+}
+
+
 - (void)respondToSelector:(SEL)selector invocation:(NSInvocation *)invocation {
     
     GDRSMock *mock = [invocation target];
