@@ -50,7 +50,10 @@ typedef void(^GDRSRealObjectBlock)(NSUInteger index);
     
     usleep(2e5); // Work arround a possible XCode timing bug.
     
-    GDRSRealObject<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSRealObject new] setupBlock:^(GDRSMock *mock, GDRSMockStub *stub) {
+    GDRSRealObject<GDRSMock> *mock
+    = [GDRSMock
+       mockWithMockedObject:[GDRSRealObject new]
+       setupBlock:^(GDRSMock *mock, GDRSMockStub *stub) {
         [stub setIntegerRetVal:3 forSel:@selector(integerProp)];
     }];
     
@@ -62,9 +65,13 @@ typedef void(^GDRSRealObjectBlock)(NSUInteger index);
 
     usleep(2e5); // Work arround a possible XCode timing bug.
     
-    GDRSRealObject<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSRealObject new] setupBlock:^(GDRSMock *mock, GDRSMockStub *stub) {
-        [stub setUIntegerRetVal:2 forSel:@selector(uIntegerProp)];
-    }];
+    GDRSRealObject<GDRSMock> *mock
+    = [GDRSMock
+       mockWithMockedObject:[GDRSRealObject new]
+       setupBlock:^(GDRSMock *mock, GDRSMockStub *stub) {
+           [stub setUIntegerRetVal:2 forSel:@selector(uIntegerProp)];
+           
+       }];
     
     XCTAssertEqual(mock.uIntegerProp, (NSUInteger)2, @"Testing returning unsigned integer has failed. Returned value is %i, while it should have been 2.", mock.uIntegerProp);
 }
@@ -73,9 +80,12 @@ typedef void(^GDRSRealObjectBlock)(NSUInteger index);
     
     usleep(2e5); // Work arround a possible XCode timing bug.
     
-    GDRSRealObject<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSRealObject new] setupBlock:^(GDRSMock *mock, GDRSMockStub *stub) {
-        [stub setFloatRetVal:3.5 forSel:@selector(floatProp)];
-    }];
+    GDRSRealObject<GDRSMock> *mock
+    = [GDRSMock
+       mockWithMockedObject:[GDRSRealObject new]
+       setupBlock:^(GDRSMock *mock, GDRSMockStub *stub) {
+           [stub setFloatRetVal:3.5 forSel:@selector(floatProp)];
+       }];
     
     XCTAssertEqualWithAccuracy(mock.floatProp, (float)3.5, 0.001, @"Testing returning float has failed. Returned value is %f, while it should have been 2.", mock.floatProp);
     
@@ -85,9 +95,12 @@ typedef void(^GDRSRealObjectBlock)(NSUInteger index);
     
     usleep(2e5); // Work arround a possible XCode timing bug.
     
-    GDRSRealObject<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSRealObject new] setupBlock:^(GDRSMock *mock, GDRSMockStub *stub) {
-        [stub setDoubleRetVal:4.5 forSel:@selector(doubleProp)];
-    }];
+    GDRSRealObject<GDRSMock> *mock
+    = [GDRSMock
+       mockWithMockedObject:[GDRSRealObject new]
+       setupBlock:^(GDRSMock *mock, GDRSMockStub *stub) {
+           [stub setDoubleRetVal:4.5 forSel:@selector(doubleProp)];
+       }];
     
     XCTAssertEqualWithAccuracy(mock.doubleProp, (double)4.5, 0.001, @"Testing returning double has failed. Returned value is %f, while it should have been 2.", mock.doubleProp);
     
@@ -99,9 +112,12 @@ typedef void(^GDRSRealObjectBlock)(NSUInteger index);
     
     NSObject *expectedObject = [NSObject new];
     
-    GDRSRealObject<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSRealObject new] setupBlock:^(GDRSMock *mock, GDRSMockStub *stub) {
-        [stub setObjectRetVal:expectedObject forSel:@selector(objectProp)];
-    }];
+    GDRSRealObject<GDRSMock> *mock
+    = [GDRSMock
+       mockWithMockedObject:[GDRSRealObject new]
+       setupBlock:^(GDRSMock *mock, GDRSMockStub *stub) {
+           [stub setObjectRetVal:expectedObject forSel:@selector(objectProp)];
+       }];
     
     XCTAssertEqual(mock.objectProp, expectedObject, @"Testing returning object has failed. Returned value is %@, while it should have been %@.", mock.objectProp, expectedObject);
     
@@ -113,12 +129,15 @@ typedef void(^GDRSRealObjectBlock)(NSUInteger index);
     
     __block NSUInteger result = 0;
     
-    GDRSRealObject<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSRealObject new] setupBlock:^(GDRSMock *mock, GDRSMockStub *stub) {
-        [stub forSel:@selector(blockMethod:) setResponder:^(GDRSMockMethodCall *methodCall) {
-            GDRSRealObjectBlock blockArg = [methodCall getObjectArgumentAtIndex:0];
-            blockArg(5);
-        }];
-    }];
+    GDRSRealObject<GDRSMock> *mock
+    = [GDRSMock
+       mockWithMockedObject:[GDRSRealObject new]
+       setupBlock:^(GDRSMock *mock, GDRSMockStub *stub) {
+           [stub forSel:@selector(blockMethod:) setResponder:^(GDRSMockMethodCall *methodCall) {
+               GDRSRealObjectBlock blockArg = [methodCall getObjectArgumentAtIndex:0];
+               blockArg(5);
+           }];
+       }];
     
     [mock blockMethod:^(NSUInteger index) {
         result = index;
@@ -131,7 +150,10 @@ typedef void(^GDRSRealObjectBlock)(NSUInteger index);
     
     usleep(2e5); // Work arround a possible XCode timing bug.
     
-    GDRSRealObject<GDRSMock> *mock = [GDRSMock mockWithMockedObject:[GDRSRealObject new] setupBlock:^(GDRSMock *mock, GDRSMockStub *stub) {
+    GDRSRealObject<GDRSMock> *mock
+    = [GDRSMock
+       mockWithMockedObject:[GDRSRealObject new]
+       setupBlock:^(GDRSMock *mock, GDRSMockStub *stub) {
         [stub forSel:@selector(anInteger:andAFloat:) setResponder:^(GDRSMockMethodCall *methodCall) { }];
     }];
     
